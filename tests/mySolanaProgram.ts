@@ -1,6 +1,7 @@
 import * as anchor from '@project-serum/anchor';
 import { Program } from '@project-serum/anchor';
 import { MySolanaProgram } from '../target/types/my_solana_program';
+import { expect, assert } from 'chai';
 
 describe('mySolanaProgram', () => {
 
@@ -9,9 +10,21 @@ describe('mySolanaProgram', () => {
 
   const program = anchor.workspace.MySolanaProgram as Program<MySolanaProgram>;
 
-  it('Is initialized!', async () => {
+  it('setup tweet platform!', async () => {
     // Add your test here.
-    const tx = await program.rpc.initialize({});
-    console.log("Your transaction signature", tx);
+    const tweetKeypair = anchor.web3.Keypair.generate();
+    const user = program.provider.wallet;
+    await program.rpc.setupPlatform({
+      accounts: {
+        tweet: tweetKeypair.publicKey,
+        user: user.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId
+      },
+      signers: [tweetKeypair]
+    });
+    
+    let tweet = await program.account.tweet.fetch(tweetKeypair.publicKey);
+    expect(tweet.likes).to.equal(0);
+    expect(tweet.message).to.equal('');
   });
 });
