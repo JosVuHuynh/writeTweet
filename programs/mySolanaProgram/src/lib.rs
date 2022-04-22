@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("Hk4s82zGNFDQKXdf6XyiyyMhkcx1HTu8wqRtpbukdHTS");
 
 #[program]
 pub mod my_solana_program {
@@ -59,7 +59,7 @@ pub mod my_solana_program {
 
 #[derive(Accounts)] //Implements an Accounts deserializer on the given struct, applying any constraints specified via inert #[account(..)] attributes upon deserialization.
 pub struct TweetPlatform<'info> {
-    #[account(init, payer = user)] //Marks the account as being initialized, skipping the account discriminator check. When using init, a rent Sysvar must be present in the Accounts struct.
+    #[account(init, payer = user, space = 9000)] //Marks the account as being initialized, skipping the account discriminator check. When using init, a rent Sysvar must be present in the Accounts struct.
     pub tweet: Account<'info, Tweet>,
 
     #[account(mut)] //Marks the account as mutable and persists the state transition.
@@ -87,7 +87,6 @@ pub struct LikeTweet<'info> {
     #[account(mut)]
     pub tweet: Account<'info, Tweet>
 }
-
 
 
 #[error]
